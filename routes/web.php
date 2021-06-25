@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ClientController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,12 +19,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
-Route::get('/testComponents', function () {
-    return view('Test');
+
+Route::middleware(['auth'])->group(function(){
+    Route::get('/clients', [ClientController::class, 'index'])->name('dashboard');
+    Route::get('/client/create', [ClientController::class, 'create'])->name('createClient');
 });
 
 require __DIR__.'/auth.php';
