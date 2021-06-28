@@ -19,11 +19,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
 Route::middleware(['auth'])->group(function(){
     Route::get('/clients', [ClientController::class, 'index'])->name('dashboard');
-    Route::get('/client/create', [ClientController::class, 'create'])->name('createClient');
+    Route::get('/client/create', [ClientController::class, 'create'])->name('client.create');
+    Route::post('/client/store', [ClientController::class, 'store'])->name('client.store');
+    Route::get('/client/{client}', [ClientController::class, 'show'])->name('client.show');
+    Route::get('/client/{client}/edit', [ClientController::class, 'edit'])->name('client.edit');
+    Route::put('/client/{client_id}', [ClientController::class, 'update'])->name('client.update');
+    Route::delete('/client/{client_id}', [ClientController::class, 'destroy'])->name('client.delete');
 });
+
+
 
 require __DIR__.'/auth.php';

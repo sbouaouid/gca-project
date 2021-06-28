@@ -19,7 +19,7 @@
                         <!-- Nom -->
                         <div>
                             <x-label for="nom" :value="__('Nom')" />
-                            <x-input id="nom" class="block mt-1 w-full" type="text" name="nom" :value="old('nom')" placeholder="Nom" required autofocus />
+                            <x-input id="nom" class="block mt-1 w-full" type="text" name="nom" value="{{$client->nom}}" placeholder="Nom" required autofocus />
                         </div >
 
                         <!-- Addresse -->

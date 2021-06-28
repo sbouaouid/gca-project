@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
@@ -14,7 +16,12 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        $clients = Auth::User()->clients();
+
+        return view('dashboard', [
+            'client' => $clients
+        ]);
+
     }
 
     /**
@@ -24,7 +31,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        return view("ajouterClient");
+        return view('ajouterClient');
     }
 
     /**
@@ -35,6 +42,7 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
+        /* ********** VALIDATION DES CHAMPS DU FORMULAIRE ************* */
         $request->validate([
             'nom' => 'required|max:25',
             'adresse' => 'required|max:255',
@@ -43,8 +51,28 @@ class ClientController extends Controller
             'telephone1'=> 'required|digits:10',
             'telephone2'=> 'nullable|digits:10',
             'fax'=>'nullable|digits:10',
-            
+            'observation'=>'nullable',
+            'typeClient'=>'required'      
         ]);
+        /* ************************************************************ */
+
+        /* ***** ENREGISTREMENT DES INFORMATIONS DANS LA BASE DE DONNEES ******* */
+        $client = new Client();
+        $client->user_id=Auth::user()->id;
+        $client->nom = $request->input('nom');
+        $client->adresse= $request->input('adresse');
+        $client->ville= $request->input('ville');
+        $client->email= $request -> input('email');
+        $client->téléphone1= $request->input('telephone1');
+        $client->téléphone2= $request->input('telephone2');
+        $client->fax= $request->input('fax');
+        $client->observation_client= $request->input('observation');
+        $client->type= $request->input('typeClient');
+        $client->save();
+        /* ********************************************************************* */
+
+        /***  REDIRECTION VERS LA FICHE DESCRIPTIVE DU CLIENT ***/ 
+        return redirect()-> route('client.show',$client);
     }
 
     /**
@@ -55,7 +83,21 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
-        //
+        /*$leClient = Client::find($id);
+
+        return view('ficheClient', [
+            'nom'=> $leClient->nom,
+            'adresse'=> $leClient->adresse,
+            'ville'=> $leClient->ville,
+            'telephone1' => $leClient->téléphone1,
+            'telephone2' => $leClient->téléphone2,
+            'fax' => $leClient->fax,
+            'email' => $leClient->email,
+            'observation' => $leClient->observation_client, 
+            'type' => $leClient->type
+        ]);*/
+
+        return view('ficheClient', compact('client'));
     }
 
     /**
@@ -66,7 +108,7 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        //
+        return view('modifierClient', compact('client'));
     }
 
     /**
@@ -89,6 +131,8 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        //
+        $client->delete();
+        return redirect()->route('dashboard')->with('success', 'Le client a été supprimé');
     }
+
 }

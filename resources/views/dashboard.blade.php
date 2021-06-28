@@ -9,7 +9,7 @@
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-3 bg-white border-b border-gray-200">
-                    <form method="GET" action="{{ route('createClient') }}">
+                    <form method="GET" action="{{ route('client.create') }}">
                         @csrf
                         <button type="submit">Ajouter un client</button>
                     </form>
@@ -17,4 +17,20 @@
             </div>
         </div>
     </div>
+
+    @foreach ($client as $client)
+    <div class="py-12">
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-3 bg-white border-b border-gray-200">
+                    <form method="GET" action="{{ route('client.show', $client) }}">
+                        @csrf
+                        <button type="submit">{{$client->name}}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+
 </x-app-layout>
