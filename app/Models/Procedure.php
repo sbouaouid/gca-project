@@ -9,6 +9,18 @@ class Procedure extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'Ref_tribunal',
+        'Date_ouverture_dossier',
+        'Tribunal',
+        'Ville'
+    ];
+
     public function dossier(){
         return $this->belongsTo('App\dossier');
     }

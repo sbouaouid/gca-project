@@ -16,12 +16,9 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = Auth::User()->clients();
-
-        return view('dashboard', [
-            'client' => $clients
-        ]);
-
+        $clients = Auth::User()->clients;
+     //   dd($clients);
+        return view('dashboard')->with('clients', $clients);
     }
 
     /**
@@ -72,7 +69,7 @@ class ClientController extends Controller
         /* ********************************************************************* */
 
         /***  REDIRECTION VERS LA FICHE DESCRIPTIVE DU CLIENT ***/ 
-        return redirect()-> route('client.show',$client);
+        return redirect()-> route('client.show',$client->id);
     }
 
     /**
@@ -81,22 +78,9 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function show(Client $client)
+    public function show($id)
     {
-        /*$leClient = Client::find($id);
-
-        return view('ficheClient', [
-            'nom'=> $leClient->nom,
-            'adresse'=> $leClient->adresse,
-            'ville'=> $leClient->ville,
-            'telephone1' => $leClient->téléphone1,
-            'telephone2' => $leClient->téléphone2,
-            'fax' => $leClient->fax,
-            'email' => $leClient->email,
-            'observation' => $leClient->observation_client, 
-            'type' => $leClient->type
-        ]);*/
-
+        $client = Client::findOrFail($id);
         return view('ficheClient', compact('client'));
     }
 
@@ -118,9 +102,35 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Client $client)
+    public function update(Request $request,$id)
     {
-        //
+        $request->validate([
+            'nom' => 'required|max:25',
+            'adresse' => 'required|max:255',
+            'ville' => 'required',
+            'email'=> 'required|email|unique:users',
+            'telephone1'=> 'required|digits:10',
+            'telephone2'=> 'nullable|digits:10',
+            'fax'=>'nullable|digits:10',
+            'observation'=>'nullable',
+            'typeClient'=>'required'      
+        ]);
+
+        $client = Client::findOrFail($id);
+
+        $client->user_id=Auth::user()->id;
+        $client->nom = $request->input('nom');
+        $client->adresse= $request->input('adresse');
+        $client->ville= $request->input('ville');
+        $client->email= $request -> input('email');
+        $client->téléphone1= $request->input('telephone1');
+        $client->téléphone2= $request->input('telephone2');
+        $client->fax= $request->input('fax');
+        $client->observation_client= $request->input('observation');
+        $client->type= $request->input('typeClient');
+        $client->save();
+
+        return redirect()-> route('client.show',$client->id);
     }
 
     /**

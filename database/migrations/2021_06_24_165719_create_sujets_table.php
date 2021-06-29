@@ -15,7 +15,6 @@ class CreateSujetsTable extends Migration
     {
         Schema::create('sujets', function (Blueprint $table) {
             $table->id();
-            $table->integer('DossierID')->index('FKSujet693180');
             $table->string('Ref', 25)->nullable();
         });
     }

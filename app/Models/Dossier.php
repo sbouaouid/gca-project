@@ -9,6 +9,20 @@ class Dossier extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'Ref_cabinet',
+        'V_ref',
+        'Ref_tribunal',
+        'Tribunal',
+        'Date',
+        'Lieu'
+    ];
+
     public function client(){
         return $this->belongsTo('App\Models\Client');
     }

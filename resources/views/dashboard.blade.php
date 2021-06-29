@@ -16,16 +16,16 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
 
-    @foreach ($client as $client)
-    <div class="py-12">
+    @foreach ($clients as $client)
+    <div class="py-3">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-3 bg-white border-b border-gray-200">
-                    <form method="GET" action="{{ route('client.show', $client) }}">
+                    <form method="GET" action="{{ route('client.show', $client->id) }}">
                         @csrf
-                        <button type="submit">{{$client->name}}</button>
+                        <button type="submit">{{$client->Nom}}</button>
                     </form>
                 </div>
             </div>
